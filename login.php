@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'config.php';
 
 $error = '';
 
@@ -7,13 +8,25 @@ if (isset($_POST['login'])) {
     $username = trim($_POST['username'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
-    if ($username === 'admin' && $password === 'admin123') {
-        $_SESSION['admin_logged_in'] = true;
-        header('Location: index.php');
-        exit();
-    }
+    if ($username === '' || $password === '') {
+        $error = 'Please enter username and password.';
+    } else {
+        $query = "SELECT id, username, password FROM users WHERE username = ?";        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "s", $username);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $user = mysqli_fetch_assoc($result);
 
-    $error = 'Invalid username or password.';
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['admin_logged_in'] = true;
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            header('Location: index.php');
+            exit();
+        }
+
+        $error = 'Invalid username or password.';
+    }
 }
 ?>
 

@@ -1,11 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header('Location: ../login.php');
-    exit();
-}
-
+include '../auth.php';
 include '../config.php';
 
 $error = '';
@@ -14,15 +8,18 @@ if (isset($_POST['save'])) {
     $name = trim($_POST['txt_name']);
     $email = trim($_POST['txt_email']);
     $course = trim($_POST['txt_course']);
+    $age = trim($_POST['txt_age']);
+    $gender = trim($_POST['txt_gender']);
+    $student_id = trim($_POST['txt_student_id']);
 
-    if ($name === '' || $email === '' || $course === '') {
+    if ($name === '' || $email === '' || $course === '' || $age === '' || $gender === '' || $student_id === '') {
         $error = 'Please fill in every field.';
     } else {
         mysqli_query(
             $conn,
-            "INSERT INTO registration (full_name, email, course) VALUES ('$name', '$email', '$course')"
+            "INSERT INTO registration (full_name, email, course, age, gender, student_id) VALUES ('$name', '$email', '$course', '$age', '$gender', '$student_id')"
         );
-        header('Location: ../index.php');
+        header('Location: ../index.php?notify=added');
         exit();
     }
 }
@@ -63,6 +60,23 @@ if (isset($_POST['save'])) {
                 <div>
                     <label for="txt_course">Course</label>
                     <input type="text" id="txt_course" name="txt_course" placeholder="Enter course name" required>
+                </div>
+                <div>
+                    <label for="txt_age">Age</label>
+                    <input type="number" id="txt_age" name="txt_age" placeholder="Enter age" min="18" max="100" required>
+                </div>
+                <div>
+                    <label for="txt_gender">Gender</label>
+                    <select id="txt_gender" name="txt_gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="txt_student_id">Student ID</label>
+                    <input type="text" id="txt_student_id" name="txt_student_id" placeholder="e.g., 2020-0000abc" required>
                 </div>
                 <button type="submit" name="save" class="primary">Save Student</button>
             </form>
