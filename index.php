@@ -2,20 +2,16 @@
 include 'auth.php';
 include 'config.php';
 
-// Pagination and Search Logic
 $items_per_page = isset($_GET['items']) ? (int)$_GET['items'] : 10;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-// Validate items per page
 if (!in_array($items_per_page, [5, 10, 25, 50])) {
     $items_per_page = 10;
 }
 
-// Calculate offset
 $offset = ($current_page - 1) * $items_per_page;
 
-// Build query with search filter
 $search_condition = '';
 if (!empty($search_query)) {
     $search_query_escaped = mysqli_real_escape_string($conn, $search_query);
@@ -25,20 +21,17 @@ if (!empty($search_query)) {
                          OR student_id LIKE '%$search_query_escaped%'";
 }
 
-// Get total count for pagination
 $count_query = "SELECT COUNT(*) as total FROM registration" . $search_condition;
 $count_result = mysqli_query($conn, $count_query);
 $count_row = mysqli_fetch_assoc($count_result);
 $total_records = $count_row['total'];
 $total_pages = ceil($total_records / $items_per_page);
 
-// Ensure current page is valid
 if ($current_page > $total_pages && $total_pages > 0) {
     $current_page = $total_pages;
     $offset = ($current_page - 1) * $items_per_page;
 }
 
-// Get paginated results
 $result = mysqli_query($conn, "SELECT * FROM registration" . $search_condition . " LIMIT $offset, $items_per_page");
 ?>
 
