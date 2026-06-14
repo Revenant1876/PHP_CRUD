@@ -1,11 +1,14 @@
 <?php
+// Ensure only authenticated users can access the edit page.
 include '../auth.php';
 include '../config.php';
 
+// Read the student record ID from the URL and load its data.
 $id = intval($_GET['id']);
 $res = mysqli_query($conn, "SELECT * FROM registration WHERE id=$id");
 $row = mysqli_fetch_assoc($res);
 
+// Handle the update form submission.
 if (isset($_POST['update'])) {
     $n = trim($_POST['u_name']);
     $e = trim($_POST['u_email']);
@@ -14,8 +17,11 @@ if (isset($_POST['update'])) {
     $g = trim($_POST['u_gender']);
     $s = trim($_POST['u_student_id']);
 
+    // Update the selected student row in the database.
     mysqli_query($conn, "UPDATE registration SET full_name='$n', email='$e', course='$c', age='$a', gender='$g', student_id='$s' WHERE id=$id");
-    header("Location: ../index.php?notify=updated");
+
+    // Redirect back to the list page with an update notification.
+    header("Location: ../index.php?notify=updated&count=1");
     exit();
 }
 ?>
@@ -33,12 +39,13 @@ if (isset($_POST['update'])) {
         <div class="topbar">
             <h1>Edit Student</h1>
             <div>
-                <a href="../index.php">Student List</a>
-                <a href="../logout.php">Logout</a>
+                <a href="../index.php" class="button secondary" aria-label="Student list"><span class="button-icon">📋</span><span class="button-text">Student List</span></a>
+                <a href="../logout.php" class="button warn" aria-label="Logout"><span class="button-icon">🔒</span><span class="button-text">Logout</span></a>
             </div>
         </div>
 
         <div class="card">
+            <!-- Edit form pre-populated with the current student values. -->
             <form method="POST">
                 <div>
                     <label for="u_name">Name</label>

@@ -5,7 +5,9 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0d3b66 0%, #1a5f7a 25%, #2d6a4f 50%, #1b4d3e 75%, #0d3b66 100%);
+    background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.22), transparent 22%),
+                radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.16), transparent 18%),
+                linear-gradient(135deg, #0d3b66 0%, #1a5f7a 25%, #2d6a4f 50%, #1b4d3e 75%, #0d3b66 100%);
     background-size: 400% 400%;
     animation: waveGradient 15s ease infinite;
     color: #1f2937;
@@ -44,6 +46,45 @@ body::after {
     z-index: 1;
 }
 
+.page-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(125, 211, 252, 0.06) 0px,
+        rgba(125, 211, 252, 0.06) 4px,
+        transparent 4px,
+        transparent 24px
+    );
+    opacity: 0.45;
+    transform: translateZ(0);
+    animation: beamSlide 14s linear infinite;
+    border-radius: 20px;
+}
+
+.page-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.18), transparent 18%),
+                radial-gradient(circle at 80% 15%, rgba(16, 185, 129, 0.12), transparent 16%),
+                radial-gradient(circle at 60% 75%, rgba(34, 197, 94, 0.08), transparent 20%);
+    pointer-events: none;
+    opacity: 0.95;
+    border-radius: 20px;
+}
+
+@keyframes beamSlide {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 120px 120px;
+    }
+}
+
 @keyframes waveGradient {
     0% {
         background-position: 0% 50%;
@@ -69,8 +110,8 @@ body::after {
     max-width: 980px;
     margin: 32px auto;
     padding: 24px;
-    background: #ffffff;
-    border: 1px solid #d1d5db;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(209, 213, 219, 0.7);
     border-radius: 20px;
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
     position: relative;
@@ -95,9 +136,12 @@ body::after {
 
 .topbar a {
     margin-left: 12px;
-    color: #1d4ed8;
     text-decoration: none;
     font-weight: 600;
+}
+
+.topbar a:not(.button) {
+    color: #1d4ed8;
 }
 
 .card {
@@ -158,7 +202,7 @@ textarea:focus {
 button.primary,
 input[type='submit'].primary {
     border: none;
-    background: #2563eb;
+    background: #16a34a;
     color: #ffffff;
     padding: 12px 16px;
     border-radius: 8px;
@@ -167,7 +211,331 @@ input[type='submit'].primary {
 
 button.primary:hover,
 input[type='submit'].primary:hover {
+    background: #15803d;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.selection-hint {
+    margin-top: 12px;
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.gl-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    cursor: pointer;
+    user-select: none;
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    position: relative;
+}
+
+.gl-checkbox__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.gl-checkbox__box {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border-radius: 7px;
+    background: #f8fafc;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gl-checkbox__box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(34, 197, 94, 0.35) 0%, transparent 70%);
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.3s ease, transform 0.4s ease;
+}
+
+.gl-checkbox:hover .gl-checkbox__box {
+    border-color: rgba(34, 197, 94, 0.35);
+    transform: scale(1.06);
+}
+
+.gl-checkbox__input:checked ~ .gl-checkbox__box {
+    background: linear-gradient(135deg, #c8f060, #60f0b8);
+    border-color: transparent;
+    box-shadow: 0 0 0 3px rgba(200, 240, 96, 0.15), 0 4px 14px rgba(200, 240, 96, 0.3);
+    transform: scale(1.05);
+}
+
+.gl-checkbox__input:checked ~ .gl-checkbox__box::before {
+    opacity: 1;
+    transform: scale(1.5);
+}
+
+.gl-checkbox__check {
+    width: 13px;
+    height: 13px;
+    color: #0f172a;
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    transition: stroke-dashoffset 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s;
+}
+
+.gl-checkbox__input:checked ~ .gl-checkbox__box .gl-checkbox__check {
+    stroke-dashoffset: 0;
+}
+
+.gl-checkbox__label {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: rgba(15, 23, 42, 0.65);
+    transition: color 0.25s ease;
+}
+
+.gl-checkbox:hover .gl-checkbox__label {
+    color: rgba(15, 23, 42, 0.9);
+}
+
+.gl-checkbox__input:checked ~ .gl-checkbox__label {
+    color: rgba(15, 23, 42, 0.95);
+}
+
+.gl-checkbox--compact .gl-checkbox__label,
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+#studentTable .select-col {
+    display: none;
+}
+
+#studentTable.selection-active .select-col {
+    display: table-cell;
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.button:hover {
+    transform: translateY(-1px);
+}
+
+.button .button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.button .button-text {
+    display: inline;
+}
+
+.button.success {
+    background: #16a34a;
+    color: #ffffff;
+    border-color: #15803d;
+}
+
+.button.success:hover {
+    background: #15803d;
+}
+
+.button.secondary,
+.button.info {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #1d4ed8;
+}
+
+.button.secondary:hover,
+.button.info:hover {
     background: #1e40af;
+}
+
+.button.warn {
+    background: #ea580c;
+    color: #ffffff;
+    border-color: #c2410c;
+}
+
+.button.warn:hover {
+    background: #c2410f;
+}
+
+.button.danger {
+    background: #dc2626;
+    color: #ffffff;
+    border-color: #b91c1c;
+}
+
+.button.danger:hover {
+    background: #b91c1c;
+}
+
+@media (max-width: 900px) {
+    .page-container {
+        margin: 20px 12px;
+        padding: 20px;
+    }
+
+    .topbar,
+    .search-pagination-container {
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .topbar {
+        justify-content: space-between;
+    }
+
+    .topbar div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .search-box form,
+    .items-per-page,
+    .bulk-actions {
+        width: 100%;
+    }
+
+    .search-box form {
+        flex-direction: column;
+    }
+
+    .search-box button,
+    .search-box a {
+        width: 100%;
+    }
+
+    .bulk-actions {
+        justify-content: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 680px) {
+    .page-container {
+        margin: 12px;
+        padding: 16px;
+    }
+
+    .topbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .topbar h1 {
+        font-size: 1.1rem;
+    }
+
+    .topbar div {
+        justify-content: flex-start;
+    }
+
+    .search-pagination-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box form {
+        gap: 10px;
+    }
+
+    .search-box input,
+    .search-box button,
+    .search-box a,
+    .items-per-page select {
+        width: 100%;
+    }
+
+    .items-per-page {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .bulk-actions {
+        justify-content: flex-start;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .button {
+        padding: 10px;
+        min-width: 52px;
+    }
+
+    .button .button-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .button .button-icon {
+        margin-right: 0;
+    }
+
+    th,
+    td {
+        padding: 10px 8px;
+    }
+
+    .action-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .action-links a,
+    .action-links button {
+        width: auto;
+    }
+}
+
+.action-links a {
+    margin-right: 8px;
+    margin-bottom: 4px;
 }
 
 .table-wrapper {
@@ -219,7 +587,8 @@ tr:hover td {
 }
 
 .notification {
-    padding: 14px 16px;
+    position: relative;
+    padding: 14px 16px 14px 18px;
     border-radius: 10px;
     margin-bottom: 24px;
     font-weight: 600;
@@ -230,6 +599,36 @@ tr:hover td {
     background: #dcfce7;
     color: #166534;
     border: 1px solid #86efac;
+}
+
+.notification.info {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border: 1px solid #93c5fd;
+}
+
+.notification.danger {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.notification .close-button {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.notification .close-button:hover {
+    opacity: 0.7;
 }
 
 @keyframes slideIn {
@@ -276,6 +675,11 @@ tr:hover td {
 .search-box {
     flex: 1;
     min-width: 250px;
+}
+
+.bulk-actions {
+    display: flex;
+    align-items: center;
 }
 
 .search-box input {
@@ -395,6 +799,61 @@ tr:hover td {
     color: #666;
     font-size: 14px;
     margin-top: 10px;
+}
+
+.dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.25s ease;
+}
+
+.dialog-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.dialog-content {
+    width: min(520px, 100%);
+    background: rgba(15, 23, 42, 0.96);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 18px;
+    box-shadow: 0 24px 80px rgba(15, 23, 42, 0.45);
+    padding: 28px;
+    color: #f8fafc;
+    backdrop-filter: blur(12px);
+}
+
+.dialog-header {
+    margin-bottom: 24px;
+}
+
+.dialog-title {
+    margin: 0 0 12px;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+}
+
+.dialog-description {
+    margin: 0;
+    line-height: 1.7;
+    color: #d1d5db;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.dialog-footer .button {
+    min-width: 110px;
 }
 
 .no-results {

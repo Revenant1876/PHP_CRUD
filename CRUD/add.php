@@ -1,9 +1,12 @@
 <?php
+// Ensure only authenticated users can add students.
 include '../auth.php';
 include '../config.php';
 
+// Holds validation error messages for display.
 $error = '';
 
+// Handle form submission when the Save button is pressed.
 if (isset($_POST['save'])) {
     $name = trim($_POST['txt_name']);
     $email = trim($_POST['txt_email']);
@@ -12,14 +15,18 @@ if (isset($_POST['save'])) {
     $gender = trim($_POST['txt_gender']);
     $student_id = trim($_POST['txt_student_id']);
 
+    // Verify that no required field is empty.
     if ($name === '' || $email === '' || $course === '' || $age === '' || $gender === '' || $student_id === '') {
         $error = 'Please fill in every field.';
     } else {
+        // Add the new student record to the database.
         mysqli_query(
             $conn,
             "INSERT INTO registration (full_name, email, course, age, gender, student_id) VALUES ('$name', '$email', '$course', '$age', '$gender', '$student_id')"
         );
-        header('Location: ../index.php?notify=added');
+
+        // Redirect back to the list page and show a success notification.
+        header('Location: ../index.php?notify=added&count=1');
         exit();
     }
 }
@@ -38,8 +45,8 @@ if (isset($_POST['save'])) {
         <div class="topbar">
             <h1>Add Student</h1>
             <div>
-                <a href="../index.php">Student List</a>
-                <a href="../logout.php">Logout</a>
+                <a href="../index.php" class="button secondary" aria-label="Student list"><span class="button-icon">📋</span><span class="button-text">Student List</span></a>
+                <a href="../logout.php" class="button warn" aria-label="Logout"><span class="button-icon">🔒</span><span class="button-text">Logout</span></a>
             </div>
         </div>
 
@@ -48,6 +55,7 @@ if (isset($_POST['save'])) {
                 <div class="error"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
 
+            <!-- Student creation form -->
             <form method="POST">
                 <div>
                     <label for="txt_name">Name</label>
