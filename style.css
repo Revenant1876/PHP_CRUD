@@ -325,6 +325,73 @@ input[type='submit'].primary:hover {
     border: 0;
 }
 
+.expanding-button {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    position: relative !important;
+    overflow: visible !important;
+    background-color: rgb(20, 20, 20) !important;
+    transition: width 0.3s ease, border-radius 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+}
+
+.expanding-button.secondary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+}
+
+.expanding-button.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+}
+
+.expanding-button .button-icon {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 20px !important;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s, width 0.3s ease;
+}
+
+.expanding-button .button-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: auto !important;
+    opacity: 0;
+    font-size: 0;
+    transition: opacity 0.3s ease 0.1s, font-size 0.3s ease 0.1s;
+    white-space: nowrap;
+    margin: 0 !important;
+}
+
+.expanding-button:hover {
+    width: 140px !important;
+    border-radius: 50px !important;
+}
+
+.expanding-button.secondary:hover {
+    background: linear-gradient(135deg, #3b82f6, #1e40af) !important;
+}
+
+.expanding-button.danger:hover {
+    background: linear-gradient(135deg, #ff4545, #dc2626) !important;
+}
+
+.expanding-button:hover .button-icon {
+    transform: translateX(-35%);
+    width: 24px !important;
+    font-size: 24px !important;
+}
+
+.expanding-button:hover .button-text {
+    opacity: 1;
+    font-size: 14px;
+    transform: translateX(20px) translateY(-50%);
+}
+
 #studentTable .select-col {
     display: none;
 }

@@ -181,8 +181,8 @@ $result = mysqli_query($conn, "SELECT * FROM registration" . $search_condition .
                                     <td><?php echo htmlspecialchars($row['gender']); ?></td>
                                     <td><?php echo htmlspecialchars($row['student_id']); ?></td>
                                     <td class="action-links">
-                                        <a href="CRUD/edit.php?id=<?php echo $row['id']; ?>" class="button secondary" aria-label="Edit student"><span class="button-icon">✏️</span><span class="button-text">Edit</span></a>
-                                        <button type="button" class="button danger" onclick="confirmDelete('CRUD/delete.php?id=<?php echo $row['id']; ?>')" aria-label="Delete student"><span class="button-icon">🗑️</span><span class="button-text">Delete</span></button>
+                                        <a href="CRUD/edit.php?id=<?php echo $row['id']; ?>" class="button secondary expanding-button" aria-label="Edit student" data-label="Edit"><span class="button-icon">✏️</span><span class="button-text">Edit</span></a>
+                                        <button type="button" class="button danger expanding-button" onclick="confirmDelete('CRUD/delete.php?id=<?php echo $row['id']; ?>')" aria-label="Delete student" data-label="Delete"><span class="button-icon">🗑️</span><span class="button-text">Delete</span></button>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
